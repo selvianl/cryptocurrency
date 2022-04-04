@@ -27,7 +27,7 @@ class BitexenService:
                     Transaction.objects.all().aggregate(max=Max("time")).get("max")
                 )
                 last_timestamp_in_db = (
-                    last_timestamp_in_db if max_timestamp_in_db else "1"
+                    max_timestamp_in_db if max_timestamp_in_db else "1"
                 )
                 client.mset({"time": last_timestamp_in_db})
                 cache_timestamp = json.loads(client.get("time"))
