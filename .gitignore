@@ -1,0 +1,16 @@
+# Global
+*.pyc
+*__pycache__
+.env_local
+/static
+*.swp
+# IDE Specific (IDEA, Eclipse, Visual Code etc)
+.idea
+.settings
+.vscode
+.project
+.pydevproject
+
+.DS_Store
+#db
+db.sqlite3

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    image: btx:latest
+    entrypoint: ./entrypoint.sh
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.db
+  redis:
+    image: "redis:alpine"
+  celery:
+    image: btx:latest
+    command: celery -A cryptocurrency worker --loglevel=INFO
+    env_file:
+      - ./.env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - web
+      - db
+      - redis
+  celery-beat:
+    image: btx:latest
+    command: celery -A cryptocurrency beat --loglevel=info
+    env_file:
+      - ./.env
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - web
+      - db
+      - redis
+volumes:
+  postgres_data: null
